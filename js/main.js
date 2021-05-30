@@ -10,8 +10,8 @@ function getRandomInteger (min, max) {
     max = min;
     min = count;
   }
-  const number = min + Math.random() * (max + 1 - min);
-  return Math.floor(number);
+  const number = Math.floor(min + Math.random() * (max + 1 - min));
+  return number;
 }
 
 function getRandomFloat (min, max, digits) {
@@ -26,8 +26,8 @@ function getRandomFloat (min, max, digits) {
     max = min;
     min = count;
   }
-  const number = min + Math.random() * (max + 1 - min);
-  return number.toFixed(digits);
+  const number = parseFloat((min + Math.random() * (max + 1 - min)).toFixed(digits));
+  return number;
 }
 
 getRandomInteger(0,1);
