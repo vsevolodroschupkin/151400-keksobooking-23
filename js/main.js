@@ -26,8 +26,9 @@ function getRandomFloat (min, max, digits) {
     max = min;
     min = count;
   }
-  const number = parseFloat((min + Math.random() * (max + 1 - min)).toFixed(digits));
-  return number;
+  // eslint-disable-next-line prefer-template
+  const number = Math.min(min + (Math.random() * (max - min + parseFloat('1e-' + ((Math.random() + '').length - 1)))), max);
+  return parseFloat(number.toFixed(digits));
 }
 
 getRandomInteger(0,1);
