@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable id-length */
 // Функция взята из интернета и доработана
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -27,5 +28,3 @@ function getRandomPositiveInteger (a, b) {
   // потому что Math.random() генерирует только дробные числа и ноль.
   return Math.floor(result);
 }
-
-getRandomPositiveInteger();
