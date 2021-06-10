@@ -1,4 +1,4 @@
-function getRandomInteger (min = 0, max) {
+function getRandomInteger (min, max) {
   if (max === min) {
     return 'Начало и конец диапазона равны. Вызовите функцию с другими аргументами.';
   }

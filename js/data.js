@@ -15,6 +15,7 @@ const LOCATION_PRECISENESS = 5;
 const PRICE_MAX = 999999999999;
 const GUESTS_MAX = 20;
 const ROOMS_MAX = 10;
+const INTEGER_MIN = 0;
 const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
 
@@ -30,10 +31,10 @@ const createAd = () => {
     offer: {
       title: `Объявление по координатам: ${ locationLat} ,${ locationLng }`,
       address: `${ locationLat }, ${ locationLng }`,
-      price: utils.getRandomInteger('', PRICE_MAX),
+      price: utils.getRandomInteger(INTEGER_MIN, PRICE_MAX),
       type: utils.getRandomArrayElement(APARTMENT_TYPES),
-      rooms: utils.getRandomInteger('', ROOMS_MAX),
-      guests: utils.getRandomInteger('', GUESTS_MAX),
+      rooms: utils.getRandomInteger(INTEGER_MIN, ROOMS_MAX),
+      guests: utils.getRandomInteger(INTEGER_MIN, GUESTS_MAX),
       chekin: utils.getRandomArrayElement(CHEKIN_TIME),
       chekout: utils.getRandomArrayElement(CHEKOUT_TIME),
       features: Array.from(new Set(utils.getRandomArrayFromArray(FEATURES))),
