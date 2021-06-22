@@ -1,3 +1,1 @@
-import {getSimilarAds} from './data.js';
-
-getSimilarAds();
+import './offers.js';
