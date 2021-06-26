@@ -45,7 +45,7 @@ const createOfferElement = (offer) => {
   }
 
   offerCapacity.textContent = `${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей`;
-  offerTime.textContent = `${offer.offer.checkin}, выезд до ${offer.offer.checkout}`;
+  offerTime.textContent = `${offer.offer.cheсkin}, выезд до ${offer.offer.cheсkout}`;
   offerFeatures.textContent = `${offer.offer.features.join(', ')}`;
   offerDescription.textContent = offer.offer.description;
 
