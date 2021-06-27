@@ -46,7 +46,6 @@ const offerType = form.querySelector('#type');
 const offerPrice = form.querySelector('#price');
 const offerRoomNumber = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
-console.log(formControls);
 
 const setElementsDisabled = (elements) => {
   Array.from(elements).forEach((element) => element.setAttribute('disabled', 'disabled'));
