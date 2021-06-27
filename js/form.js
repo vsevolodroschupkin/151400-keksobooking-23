@@ -40,20 +40,20 @@ const ROOM_CAPACITIES = {
 const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const formControls = form.querySelectorAll('fieldset');
-const mapFiltersControls = mapFilters.querySelectorAll('[class^=map]');
+const mapFiltersControls = mapFilters.children;
 const offerTitle = form.querySelector('#title');
 const offerType = form.querySelector('#type');
 const offerPrice = form.querySelector('#price');
 const offerRoomNumber = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
-const capacityOptions = capacity.querySelectorAll('option');
+console.log(formControls);
 
 const setElementsDisabled = (elements) => {
-  elements.forEach((element) => element.setAttribute('disabled', 'disabled'));
+  Array.from(elements).forEach((element) => element.setAttribute('disabled', 'disabled'));
 };
 
 const setElementsEnabled = (elemets) => {
-  elemets.forEach((element) => element.removeAttribute('disabled'));
+  Array.from(elemets).forEach((element) => element.removeAttribute('disabled'));
 };
 
 const setPageInactive = () => {
@@ -70,6 +70,17 @@ const setPageActive = () => {
   setElementsEnabled(mapFiltersControls);
 };
 
+const validateCapacity = (evt) => {
+  const selectedRoomCapacities = ROOM_CAPACITIES[offerRoomNumber.value];
+  const capacityValue = capacity.value;
+  if (!selectedRoomCapacities.includes(capacityValue)) {
+    capacity.setCustomValidity('Количество комнат не соответсвует количеству гостей.');
+    evt.preventDefault();
+  } else {
+    capacity.setCustomValidity('');
+  }
+  capacity.reportValidity();
+};
 const onTitleInput = () => {
   const valueLength = offerTitle.value.length;
 
@@ -97,23 +108,9 @@ const onPriceInput = () => {
 
   offerPrice.reportValidity();
 };
-
-const validateCapacity = (evt) => {
-  const selectedRoomCapacities = ROOM_CAPACITIES[offerRoomNumber.value];
-  const capacityValue = capacity.value;
-  if (!selectedRoomCapacities.includes(capacityValue)) {
-    capacity.setCustomValidity('Количество комнат не соответсвует количеству гостей.');
-    evt.preventDefault();
-  } else {
-    capacity.setCustomValidity('');
-  }
-  capacity.reportValidity();
-};
-
 const onCapacityChange = (evt) => {
   validateCapacity(evt);
 };
-
 const onRoomsChange = (evt) => {
   validateCapacity(evt);
 };
