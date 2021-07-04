@@ -65,7 +65,4 @@ const createOfferElement = (offer) => {
   return offerElement;
 };
 
-const testOffer = createOfferElement(offers[TEST_OFFER_ID]);
-mapCanvas.appendChild(testOffer);
-
-export  {offers} ;
+export {createOfferElement};
