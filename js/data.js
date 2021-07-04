@@ -4,8 +4,8 @@ const AD_QUANTITY = 10;
 const MIN_AVATAR_NUMBER = 1;
 const MAX_AVATAR_NUMBER = 8;
 const APARTMENT_TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
-const CHEKIN_TIME = ['12:00', '13:00', '14:00'];
-const CHEKOUT_TIME = ['12:00', '13:00', '14:00'];
+const CHEСKIN_TIME = ['12:00', '13:00', '14:00'];
+const CHEСKOUT_TIME = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const LAT_MIN = 35.65000;
 const LAT_MAX = 35.70000;
@@ -35,8 +35,8 @@ const createAd = () => {
       type: utils.getRandomArrayElement(APARTMENT_TYPES),
       rooms: utils.getRandomInteger(INTEGER_MIN, ROOMS_MAX),
       guests: utils.getRandomInteger(INTEGER_MIN, GUESTS_MAX),
-      cheсkin: utils.getRandomArrayElement(CHEKIN_TIME),
-      cheсkout: utils.getRandomArrayElement(CHEKOUT_TIME),
+      cheсkin: utils.getRandomArrayElement(CHEСKIN_TIME),
+      cheсkout: utils.getRandomArrayElement(CHEСKOUT_TIME),
       features: Array.from(new Set(utils.getRandomArrayFromArray(FEATURES))),
       description: `Описание объявления с координатами: ${ locationLat }, ${ locationLng }`,
       photos: utils.getRandomArrayFromArray(PHOTOS),

@@ -1,11 +1,4 @@
-import { getSimilarAds } from './data.js';
-
-const TEST_OFFER_ID = 0;
-
 const cardTemplate  = document.querySelector('#card').content.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
-
-const offers = getSimilarAds();
 
 const createOfferElement = (offer) => {
   const offerElement = cardTemplate.cloneNode(true);
@@ -22,8 +15,8 @@ const createOfferElement = (offer) => {
 
   offerAvatar.src = offer.author.avatar ? offer.author.avatar : offerElement.removeChild(offerAvatar);
   offerTitle.textContent = offer.offer.title ? offer.offer.title : offerElement.removeChild(offerTitle);
-  offerAddress.textContent = offer.offer.address;
-  offerPrice.textContent = `${offer.offer.price} ₽/ночь`;
+  offerAddress.textContent = offer.offer.address ? offer.offer.address : offerElement.removeChild(offerAddress);
+  offerPrice.textContent = offer.offer.price ? `${offer.offer.price} ₽/ночь` : offerElement.removeChild(offerPrice);
 
   switch(offer.offer.type) {
     case 'flat' :
@@ -44,9 +37,9 @@ const createOfferElement = (offer) => {
     default: offerElement.removeChild(offerType);
   }
 
-  offerCapacity.textContent = `${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей`;
-  offerTime.textContent = `${offer.offer.cheсkin}, выезд до ${offer.offer.cheсkout}`;
-  offerFeatures.textContent = `${offer.offer.features.join(', ')}`;
+  offerCapacity.textContent = offer.offer.rooms && offer.offer.guests ? `${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей` : offerElement.removeChild(offerCapacity);
+  offerTime.textContent = offer.offer.cheсkin && offer.offer.cheсkout ? `${offer.offer.cheсkin}, выезд до ${offer.offer.cheсkout}`: offerElement.removeChild(offerTime);
+  offerFeatures.textContent = offer.offer.features ? `${offer.offer.features.join(', ')}` : offerElement.removeChild(offerFeatures);
   offerDescription.textContent = offer.offer.description;
 
   if(offer.offer.photos) {
