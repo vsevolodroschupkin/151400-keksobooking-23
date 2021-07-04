@@ -1,4 +1,5 @@
 // import '../leaflet/leaflet.js';
+import * as utils from './utils.js';
 import { getSimilarAds } from './data.js';
 import { createOfferElement } from './offers.js';
 
@@ -22,8 +23,32 @@ const SIMPLE_MARKER_URL = 'img/pin.svg';
 const SIMPLE_MARKER_ANCHOR_X = SIMPLE_MARKER_WIDTH / 2;
 
 const points = getSimilarAds();
+const form = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
+const formControls = form.querySelectorAll('fieldset');
+const mapFiltersControls = mapFilters.children;
+
+const setPageInactive = () => {
+  form.classList.add('ad-form--disabled');
+  mapFilters.classList.add('ad-form--disabled');
+  utils.setElementsDisabled(formControls);
+  utils.setElementsDisabled(mapFiltersControls);
+};
+
+const setPageActive = () => {
+  form.classList.remove('ad-form--disabled');
+  mapFilters.classList.remove('ad-form--disabled');
+  utils.setElementsEnabled(formControls);
+  utils.setElementsEnabled(mapFiltersControls);
+};
+
+setPageInactive();
+const onMapLoad = () => {
+  setPageActive();
+};
 
 const map = L.map('map-canvas')
+  .on('load', onMapLoad)
   .setView({
     lat: TOKYO_LAT,
     lng: TOKYO_LNG,

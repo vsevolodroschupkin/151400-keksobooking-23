@@ -1,5 +1,4 @@
-import * as utils from './utils.js';
-import { map, setMapStartPosition, mainMarker } from './map.js';
+import { setMapStartPosition, mainMarker } from './map.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -42,9 +41,6 @@ const ROOM_CAPACITIES = {
 };
 
 const form = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
-const formControls = form.querySelectorAll('fieldset');
-const mapFiltersControls = mapFilters.children;
 const offerTitle = form.querySelector('#title');
 const offerAddress = form.querySelector('#address');
 const offerType = form.querySelector('#type');
@@ -57,23 +53,6 @@ const mainMarkerStartCoordinates = mainMarker.getLatLng();
 offerAddress.value = `${mainMarkerStartCoordinates.lat} и ${mainMarkerStartCoordinates.lng}`;
 offerAddress.setAttribute('placeholder', `${mainMarkerStartCoordinates.lat.toFixed(LOCATION_PRECISENESS)} и ${mainMarkerStartCoordinates.lng.toFixed(LOCATION_PRECISENESS)}`);
 
-const setPageInactive = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilters.classList.add('ad-form--disabled');
-  utils.setElementsDisabled(formControls);
-  utils.setElementsDisabled(mapFiltersControls);
-};
-
-const setPageActive = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('ad-form--disabled');
-  utils.setElementsEnabled(formControls);
-  utils.setElementsEnabled(mapFiltersControls);
-};
-
-const onMapLoad = () => {
-  setPageActive();
-};
 
 const validateCapacity = (evt) => {
   const selectedRoomCapacities = ROOM_CAPACITIES[offerRoomNumber.value];
@@ -133,8 +112,6 @@ const onMainMarkerMoveend = (evt) => {
   offerAddress.value = `${coordinates.lat.toFixed(LOCATION_PRECISENESS)} и ${coordinates.lng.toFixed(LOCATION_PRECISENESS)}`;
 };
 
-setPageInactive();
-
 offerTitle.addEventListener('input', onTitleInput);
 offerPrice.addEventListener('input', onPriceInput);
 offerType.addEventListener('change', onTypeChange);
@@ -143,4 +120,3 @@ offerRoomNumber.addEventListener('change', onRoomsChange);
 formReset.addEventListener('click', onFormReset);
 form.addEventListener('submit', onFormSubmit);
 mainMarker.on('moveend', onMainMarkerMoveend);
-map.on('load', onMapLoad);
