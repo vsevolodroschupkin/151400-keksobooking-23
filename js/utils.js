@@ -39,4 +39,12 @@ function getRandomArrayFromArray (elements) {
   return new Array(getRandomInteger('',elements.length)).fill('').map(() => getRandomArrayElement(elements));
 }
 
-export {getRandomArrayElement, getRandomArrayFromArray, getRandomFloat, getRandomInteger};
+function setElementsDisabled (elements) {
+  Array.from(elements).forEach((element) => element.setAttribute('disabled', 'disabled'));
+}
+
+function setElementsEnabled (elemets) {
+  Array.from(elemets).forEach((element) => element.removeAttribute('disabled'));
+}
+
+export {getRandomArrayElement, getRandomArrayFromArray, getRandomFloat, getRandomInteger, setElementsEnabled, setElementsDisabled};

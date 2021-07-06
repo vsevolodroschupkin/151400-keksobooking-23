@@ -1,6 +1,9 @@
+import { setMapStartPosition, mainMarker } from './map.js';
+
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE_VALUE = 1000000;
+const LOCATION_PRECISENESS = 5;
 
 const TYPES = {
   bungalow: {
@@ -38,36 +41,18 @@ const ROOM_CAPACITIES = {
 };
 
 const form = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
-const formControls = form.querySelectorAll('fieldset');
-const mapFiltersControls = mapFilters.children;
 const offerTitle = form.querySelector('#title');
+const offerAddress = form.querySelector('#address');
 const offerType = form.querySelector('#type');
 const offerPrice = form.querySelector('#price');
 const offerRoomNumber = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
+const formReset = form.querySelector('.ad-form__reset');
 
-const setElementsDisabled = (elements) => {
-  Array.from(elements).forEach((element) => element.setAttribute('disabled', 'disabled'));
-};
+const mainMarkerStartCoordinates = mainMarker.getLatLng();
+offerAddress.value = `${mainMarkerStartCoordinates.lat} и ${mainMarkerStartCoordinates.lng}`;
+offerAddress.setAttribute('placeholder', `${mainMarkerStartCoordinates.lat.toFixed(LOCATION_PRECISENESS)} и ${mainMarkerStartCoordinates.lng.toFixed(LOCATION_PRECISENESS)}`);
 
-const setElementsEnabled = (elemets) => {
-  Array.from(elemets).forEach((element) => element.removeAttribute('disabled'));
-};
-
-const setPageInactive = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilters.classList.add('ad-form--disabled');
-  setElementsDisabled(formControls);
-  setElementsDisabled(mapFiltersControls);
-};
-
-const setPageActive = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('ad-form--disabled');
-  setElementsEnabled(formControls);
-  setElementsEnabled(mapFiltersControls);
-};
 
 const validateCapacity = (evt) => {
   const selectedRoomCapacities = ROOM_CAPACITIES[offerRoomNumber.value];
@@ -117,12 +102,21 @@ const onFormSubmit = (evt) => {
   validateCapacity(evt);
 };
 
+const onFormReset = (evt) => {
+  evt.preventDefault();
+  setMapStartPosition();
+};
+
+const onMainMarkerMoveend = (evt) => {
+  const coordinates = evt.target.getLatLng();
+  offerAddress.value = `${coordinates.lat.toFixed(LOCATION_PRECISENESS)} и ${coordinates.lng.toFixed(LOCATION_PRECISENESS)}`;
+};
+
 offerTitle.addEventListener('input', onTitleInput);
 offerPrice.addEventListener('input', onPriceInput);
 offerType.addEventListener('change', onTypeChange);
 capacity.addEventListener('change', onCapacityChange);
 offerRoomNumber.addEventListener('change', onRoomsChange);
+formReset.addEventListener('click', onFormReset);
 form.addEventListener('submit', onFormSubmit);
-
-setPageInactive();
-setPageActive();
+mainMarker.on('moveend', onMainMarkerMoveend);
