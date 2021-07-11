@@ -48,6 +48,8 @@ const offerPrice = form.querySelector('#price');
 const offerRoomNumber = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
 const formReset = form.querySelector('.ad-form__reset');
+const timein = form.querySelector('#timein');
+const timeout = form.querySelector('#timeout');
 
 const mainMarkerStartCoordinates = mainMarker.getLatLng();
 offerAddress.value = `${mainMarkerStartCoordinates.lat} и ${mainMarkerStartCoordinates.lng}`;
@@ -107,6 +109,23 @@ const onFormReset = (evt) => {
   setMapStartPosition();
 };
 
+const validateTime = (evt) => {
+  const timeinValue = timein.value;
+  const timeoutValue = timeout.value;
+
+  if(timeinValue !== timeoutValue) {
+    timein.setCustomValidity('Время заезда должно соответствовать времения выезда');
+    timeout.setCustomValidity('Время выезда должно соответствовать времения заезда');
+    evt.preventDefault();
+  } else {
+    timein.setCustomValidity('');
+    timeout.setCustomValidity('');
+  }
+
+  timeout.reportValidity();
+};
+
+
 const onMainMarkerMoveend = (evt) => {
   const coordinates = evt.target.getLatLng();
   offerAddress.value = `${coordinates.lat.toFixed(LOCATION_PRECISENESS)} и ${coordinates.lng.toFixed(LOCATION_PRECISENESS)}`;
@@ -117,6 +136,8 @@ offerPrice.addEventListener('input', onPriceInput);
 offerType.addEventListener('change', onTypeChange);
 capacity.addEventListener('change', onCapacityChange);
 offerRoomNumber.addEventListener('change', onRoomsChange);
+timein.addEventListener('change', validateTime);
+timeout.addEventListener('change', validateTime);
 formReset.addEventListener('click', onFormReset);
 form.addEventListener('submit', onFormSubmit);
 mainMarker.on('moveend', onMainMarkerMoveend);
