@@ -1,9 +1,12 @@
 import { setMapStartPosition, mainMarker } from './map.js';
+import { isEscEvent } from './utils.js';
+import { sendData } from './api.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE_VALUE = 1000000;
 const LOCATION_PRECISENESS = 5;
+
 
 const TYPES = {
   bungalow: {
@@ -53,6 +56,16 @@ const mainMarkerStartCoordinates = mainMarker.getLatLng();
 offerAddress.value = `${mainMarkerStartCoordinates.lat} и ${mainMarkerStartCoordinates.lng}`;
 offerAddress.setAttribute('placeholder', `${mainMarkerStartCoordinates.lat.toFixed(LOCATION_PRECISENESS)} и ${mainMarkerStartCoordinates.lng.toFixed(LOCATION_PRECISENESS)}`);
 
+const renderSuccessWindow = () => {
+  const successTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successWindow = successTemplate.cloneNode(true);
+  document.body.appendChild(successWindow);
+};
+const renderErrorWindow = () => {
+  const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  const errorWindow = errorTemplate.cloneNode(true);
+  document.body.appendChild(errorWindow);
+};
 
 const validateCapacity = (evt) => {
   const selectedRoomCapacities = ROOM_CAPACITIES[offerRoomNumber.value];
@@ -98,12 +111,82 @@ const onCapacityChange = (evt) => {
 const onRoomsChange = (evt) => {
   validateCapacity(evt);
 };
-const onFormSubmit = (evt) => {
-  validateCapacity(evt);
+
+const onErrorWindowEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    // eslint-disable-next-line no-use-before-define
+    closeErrorWindow();
+  }
+};
+const onErrorWindowClick = (evt) => {
+  evt.preventDefault();
+  // eslint-disable-next-line no-use-before-define
+  closeErrorWindow();
+};
+const onSuccessWindowEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    // eslint-disable-next-line no-use-before-define
+    closeSuccessWindow();
+  }
+};
+const onSuccessWindowClick = (evt) => {
+  evt.preventDefault();
+  // eslint-disable-next-line no-use-before-define
+  closeSuccessWindow();
 };
 
-const onFormReset = (evt) => {
+function closeErrorWindow () {
+  const errorWindow = document.querySelector('.error');
+  errorWindow.remove();
+
+  document.removeEventListener('keydown', onErrorWindowEscKeydown);
+  document.removeEventListener('click', onErrorWindowClick);
+}
+
+function closeSuccessWindow () {
+  const successWindow = document.querySelector('.success');
+  successWindow.remove();
+
+  document.removeEventListener('keydown', onSuccessWindowEscKeydown);
+  document.removeEventListener('click', onSuccessWindowClick);
+}
+
+const onErrorButtonSubmit = (evt) => {
   evt.preventDefault();
+  closeErrorWindow();
+};
+
+const onError = () => {
+  renderErrorWindow();
+
+  const errorButton = document.querySelector('.error').querySelector('.error__button');
+
+  errorButton.addEventListener('submit', onErrorButtonSubmit);
+  document.addEventListener('click', onErrorWindowClick);
+  document.addEventListener('keydown', onErrorWindowEscKeydown);
+};
+
+const onSuccess = () => {
+
+  renderSuccessWindow();
+  form.reset();
+
+  document.addEventListener('click', onSuccessWindowClick);
+  document.addEventListener('keydown', onSuccessWindowEscKeydown);
+};
+
+const onFormSubmit = (evt) => {
+  validateCapacity(evt);
+  evt.preventDefault();
+
+  const formData = new FormData(evt.target);
+
+  sendData(onSuccess, onError, formData);
+};
+
+const onFormReset = () => {
   setMapStartPosition();
 };
 

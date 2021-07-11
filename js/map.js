@@ -1,7 +1,6 @@
-// import '../leaflet/leaflet.js';
 import * as utils from './utils.js';
-import { getSimilarAds } from './data.js';
 import { createOfferElement } from './offers.js';
+import { getData } from './api.js';
 
 const TOKYO_LAT = '35.6895000';
 const TOKYO_LNG = '139.6917100';
@@ -22,7 +21,6 @@ const SIMPLE_MARKER_HEIGHT = 40;
 const SIMPLE_MARKER_URL = 'img/pin.svg';
 const SIMPLE_MARKER_ANCHOR_X = SIMPLE_MARKER_WIDTH / 2;
 
-const points = getSimilarAds();
 const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const formControls = form.querySelectorAll('fieldset');
@@ -100,9 +98,10 @@ const createMarker = (point, isMain = false) => {
 };
 
 const mainMarker = createMarker(MAIN_PIN_POINT, true);
-points.forEach((point) => {
-  createMarker(point);
-});
+
+const renderPoints = (points) => {
+  points.forEach((point) => createMarker(point));
+};
 
 const setMapStartPosition = () => {
   mainMarker.setLatLng({
@@ -115,6 +114,8 @@ const setMapStartPosition = () => {
     lng: TOKYO_LNG,
   }, INITIAL_SCALE);
 };
+
+map.on('load', getData(renderPoints, () => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу')));
 
 export { map, setMapStartPosition, mainMarker };
 
