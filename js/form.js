@@ -172,6 +172,7 @@ const onSuccess = () => {
 
   renderSuccessWindow();
   form.reset();
+  setMapStartPosition();
 
   document.addEventListener('click', onSuccessWindowClick);
   document.addEventListener('keydown', onSuccessWindowEscKeydown);
