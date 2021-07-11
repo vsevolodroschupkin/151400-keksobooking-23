@@ -20,6 +20,7 @@ const SIMPLE_MARKER_WIDTH = 40;
 const SIMPLE_MARKER_HEIGHT = 40;
 const SIMPLE_MARKER_URL = 'img/pin.svg';
 const SIMPLE_MARKER_ANCHOR_X = SIMPLE_MARKER_WIDTH / 2;
+const POINTS_QUANTITY =10;
 
 const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -100,7 +101,8 @@ const createMarker = (point, isMain = false) => {
 const mainMarker = createMarker(MAIN_PIN_POINT, true);
 
 const renderPoints = (points) => {
-  points.forEach((point) => createMarker(point));
+  points
+    .forEach((point) => createMarker(point));
 };
 
 const setMapStartPosition = () => {
@@ -114,8 +116,7 @@ const setMapStartPosition = () => {
     lng: TOKYO_LNG,
   }, INITIAL_SCALE);
 };
-
-map.on('load', getData(renderPoints, () => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу')));
+map.on('load', getData((points) => renderPoints(points.slice(0, POINTS_QUANTITY)), () => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу')));
 
 export { map, setMapStartPosition, mainMarker };
 
