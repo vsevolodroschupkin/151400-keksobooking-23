@@ -42,32 +42,12 @@ const setPageActive = () => {
 };
 
 setPageInactive();
-const onMapLoad = () => {
-  setPageActive();
-};
-
-const map = L.map('map-canvas')
-  .on('load', onMapLoad)
-  .setView({
-    lat: TOKYO_LAT,
-    lng: TOKYO_LNG,
-  }, INITIAL_SCALE);
-
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
-  },
-).addTo(map);
 
 const createCustomPopup = (point) => {
   const popupElement = createOfferElement(point);
   return popupElement;
 };
-
-const simpleMarkerGroup = L.layerGroup().addTo(map);
-
-const createMarker = (point, isMain = false) => {
+const createMarker = (point, isMain = false, target) => {
   const lat = point.location.lat;
   const lng = point.location.lng;
 
@@ -87,7 +67,7 @@ const createMarker = (point, isMain = false) => {
       draggable: !!isMain,
     },
   );
-  marker.addTo(isMain ? map : simpleMarkerGroup);
+  marker.addTo(target);
   if (!isMain) {
     marker.bindPopup( createCustomPopup(point),
       {
@@ -97,13 +77,33 @@ const createMarker = (point, isMain = false) => {
   }
   return marker;
 };
-
-const mainMarker = createMarker(MAIN_PIN_POINT, true);
-
+const simpleMarkerGroup = L.layerGroup();
 const renderPoints = (points) => {
   points
-    .forEach((point) => createMarker(point));
+    .forEach((point) => createMarker(point, false, simpleMarkerGroup));
 };
+
+const onMapLoad = () => {
+  setPageActive();
+  getData((points) => renderPoints(points.slice(0, POINTS_QUANTITY)), () => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу'));
+};
+
+const map = L.map('map-canvas')
+  .on('load', onMapLoad)
+  .setView({
+    lat: TOKYO_LAT,
+    lng: TOKYO_LNG,
+  }, INITIAL_SCALE);
+
+L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
+  },
+).addTo(map);
+
+const mainMarker = createMarker(MAIN_PIN_POINT, true, map);
+simpleMarkerGroup.addTo(map);
 
 const setMapStartPosition = () => {
   mainMarker.setLatLng({
@@ -116,7 +116,6 @@ const setMapStartPosition = () => {
     lng: TOKYO_LNG,
   }, INITIAL_SCALE);
 };
-map.on('load', getData((points) => renderPoints(points.slice(0, POINTS_QUANTITY)), () => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу')));
 
 export { map, setMapStartPosition, mainMarker };
 
