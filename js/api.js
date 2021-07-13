@@ -1,20 +1,18 @@
 const GET_DATA_URL = 'https://23.javascript.pages.academy/keksobooking/data';
 const SEND_DATA_URL = 'https://23.javascript.pages.academy/keksobooking';
 
-const getData = (onSuccess, onError) => {
-  fetch(GET_DATA_URL)
-    .then((response) => {
-      if (response.ok){
-        return response.json();
+function getData () {
+  return fetch(GET_DATA_URL)
+    .then ((response) => {
+      if(!response.ok){
+        throw new Error ('Ошибка загрузки данных с сервера.');
       }
-      onError('Не удалось получить похожие объявления. Попробуйте перезагрузить страницу.');
-    })
-    .then((ads) => onSuccess(ads))
-    .catch(() => onError('Не удалось получить похожие объявления. Попробуйте перезагрузить страницу.'));
-};
+      return response.json();
+    });
+}
 
-const sendData = (onSuccess, onError, body) => {
-  fetch(
+function sendData (body) {
+  return fetch(
     SEND_DATA_URL,
     {
       method:'POST',
@@ -23,11 +21,10 @@ const sendData = (onSuccess, onError, body) => {
   )
     .then((response) => {
       if(response.ok) {
-        onSuccess();
+        return response;
       }
-    })
-    .catch(() => onError());
-};
-
+      throw new Error ('Ошибка отправки данных формы.');
+    });
+}
 
 export {getData, sendData};

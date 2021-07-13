@@ -184,7 +184,9 @@ const onFormSubmit = (evt) => {
 
   const formData = new FormData(evt.target);
 
-  sendData(onSuccess, onError, formData);
+  sendData(formData)
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 const onFormReset = () => {

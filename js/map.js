@@ -85,7 +85,9 @@ const renderPoints = (points) => {
 
 const onMapLoad = () => {
   setPageActive();
-  getData((points) => renderPoints(points.slice(0, POINTS_QUANTITY)), () => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу'));
+  getData()
+    .then((points) => renderPoints(points.slice(0, POINTS_QUANTITY)))
+    .catch(() => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу'));
 };
 
 const map = L.map('map-canvas')
