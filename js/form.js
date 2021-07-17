@@ -78,6 +78,19 @@ const validateCapacity = (evt) => {
   }
   capacity.reportValidity();
 };
+const validatePrice = () => {
+  offerPrice.setAttribute('min', TYPES[`${ offerType.value }`]['minPrice']);
+  offerPrice.setAttribute('placeholder', TYPES[`${ offerType.value }`]['minPrice']);
+
+  const value = offerPrice.value;
+  if (value > MAX_PRICE_VALUE) {
+    offerPrice.setCustomValidity(`Уменьшите цену на ${ value - MAX_PRICE_VALUE }`);
+  } else {
+    offerPrice.setCustomValidity('');
+  }
+
+  offerPrice.reportValidity();
+};
 const onTitleInput = () => {
   const valueLength = offerTitle.value.length;
 
@@ -91,19 +104,11 @@ const onTitleInput = () => {
 
   offerTitle.reportValidity();
 };
-const onTypeChange = (evt) => {
-  offerPrice.setAttribute('min', TYPES[`${ evt.target.value }`]['minPrice']);
-  offerPrice.setAttribute('placeholder', TYPES[`${ evt.target.value }`]['minPrice']);
+const onTypeChange = () => {
+  validatePrice();
 };
 const onPriceInput = () => {
-  const value = offerPrice.value;
-  if (value > MAX_PRICE_VALUE) {
-    offerPrice.setCustomValidity(`Уменьшите цену на ${ value - MAX_PRICE_VALUE }`);
-  } else {
-    offerPrice.setCustomValidity('');
-  }
-
-  offerPrice.reportValidity();
+  validatePrice();
 };
 const onCapacityChange = (evt) => {
   validateCapacity(evt);
@@ -180,13 +185,16 @@ const onSuccess = () => {
 
 const onFormSubmit = (evt) => {
   validateCapacity(evt);
+  validatePrice();
   evt.preventDefault();
 
-  const formData = new FormData(evt.target);
+  if(capacity.validity.valid && offerPrice.validity.valid) {
+    const formData = new FormData(evt.target);
 
-  sendData(formData)
-    .then(() => onSuccess())
-    .catch(() => onError());
+    sendData(formData)
+      .then(() => onSuccess())
+      .catch(() => onError());
+  }
 };
 
 const onFormReset = () => {
