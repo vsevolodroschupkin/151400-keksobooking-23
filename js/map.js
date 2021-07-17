@@ -83,11 +83,7 @@ const createMarker = (point, isMain = false) => {
   }
   return marker;
 };
-const setFilters = (cb) => {
-  mapFilters.addEventListener('change', () => {
-    cb();
-  });
-};
+const setFilters = (cb) => mapFilters.addEventListener('change', cb);
 const filterType = (point) => {
   const typeValue = document.querySelector('#housing-type').value;
   return typeValue === 'any' ? point.offer.type : typeValue === point.offer.type;
@@ -174,13 +170,9 @@ const renderPoints = (points) => {
   simpleMarkerGroup.clearLayers();
 
   points
-    .slice()
-    .filter(filterType)
-    .filter(filterPrice)
-    .filter(filterRooms)
-    .filter(filterGuests)
+    .filter((point) =>
+      filterPrice(point) && filterType(point) && filterRooms(point) && filterGuests(point) && deleteUnrelevantOffers(point))
     .sort(compareOffers)
-    .filter(deleteUnrelevantOffers)
     .slice(0, POINTS_QUANTITY)
     .forEach((point) => createMarker(point, false));
   simpleMarkerGroup.addTo(map);
