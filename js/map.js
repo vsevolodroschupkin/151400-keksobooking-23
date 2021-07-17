@@ -4,7 +4,7 @@ import { getData } from './api.js';
 
 const TOKYO_LAT = '35.6895000';
 const TOKYO_LNG = '139.6917100';
-const INITIAL_SCALE = 15;
+const INITIAL_SCALE = 12;
 const MAIN_PIN_POINT = {
   location:
   {
@@ -20,7 +20,7 @@ const SIMPLE_MARKER_WIDTH = 40;
 const SIMPLE_MARKER_HEIGHT = 40;
 const SIMPLE_MARKER_URL = 'img/pin.svg';
 const SIMPLE_MARKER_ANCHOR_X = SIMPLE_MARKER_WIDTH / 2;
-const POINTS_QUANTITY =10;
+const POINTS_QUANTITY = 10;
 
 const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -36,18 +36,24 @@ const setPageInactive = () => {
 
 const setPageActive = () => {
   form.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('ad-form--disabled');
   utils.setElementsEnabled(formControls);
+};
+
+const setMapFiltersActive = () => {
+  mapFilters.classList.remove('ad-form--disabled');
   utils.setElementsEnabled(mapFiltersControls);
 };
 
 setPageInactive();
 
+const map = L.map('map-canvas');
+const simpleMarkerGroup = L.layerGroup();
+
 const createCustomPopup = (point) => {
   const popupElement = createOfferElement(point);
   return popupElement;
 };
-const createMarker = (point, isMain = false, target) => {
+const createMarker = (point, isMain = false) => {
   const lat = point.location.lat;
   const lng = point.location.lng;
 
@@ -67,7 +73,7 @@ const createMarker = (point, isMain = false, target) => {
       draggable: !!isMain,
     },
   );
-  marker.addTo(target);
+  marker.addTo(isMain ? map : simpleMarkerGroup);
   if (!isMain) {
     marker.bindPopup( createCustomPopup(point),
       {
@@ -77,21 +83,122 @@ const createMarker = (point, isMain = false, target) => {
   }
   return marker;
 };
-const simpleMarkerGroup = L.layerGroup();
+const setFilters = (cb) => {
+  mapFilters.addEventListener('change', () => {
+    cb();
+  });
+};
+const filterType = (point) => {
+  const typeValue = document.querySelector('#housing-type').value;
+  return typeValue === 'any' ? point.offer.type : typeValue === point.offer.type;
+};
+const filterPrice = (point) => {
+  const priceValue = document.querySelector('#housing-price').value;
+  let offerPrice;
+  switch (true) {
+    case point.offer.price < 10000 :
+      offerPrice = 'low';
+      break;
+    case point.offer.price >= 10000 && point.offer.price < 50000 :
+      offerPrice = 'middle';
+      break;
+    case point.offer.price >= 50000 :
+      offerPrice = 'high';
+      break;
+    default:
+      offerPrice = 'any';
+  }
+  return priceValue === 'any' ? point.offer.price : priceValue === offerPrice;
+};
+const filterRooms = (point) => {
+  const roomsValue = document.querySelector('#housing-rooms').value;
+  return roomsValue === 'any' ? point.offer.rooms : roomsValue === point.offer.rooms.toString();
+};
+const filterGuests = (point) => {
+  const typeValue = document.querySelector('#housing-guests').value;
+  return typeValue === 'any' ? point.offer.guests : typeValue === point.offer.guests.toString();
+};
+const getOfferRank = (offer) => {
+  const wifiInput = document.querySelector('#filter-wifi');
+  const dishwasherInput = document.querySelector('#filter-dishwasher');
+  const parkingInput = document.querySelector('#filter-parking');
+  const washerInput = document.querySelector('#filter-washer');
+  const elevatorInput = document.querySelector('#filter-elevator');
+  const conditionerInput = document.querySelector('#filter-conditioner');
+
+  const features = offer.offer.features;
+  let rank = 0;
+
+  if(features && wifiInput.checked ) {
+    features.some((element) => element === wifiInput.value ) ? rank+=1 : rank;
+  }
+  if(features && dishwasherInput.checked ) {
+    features.some((element) => element === dishwasherInput.value ) ? rank+=1 : rank;
+  }
+  if(features && parkingInput.checked ) {
+    features.some((element) => element === parkingInput.value ) ? rank+=1 : rank;
+  }
+  if(features && washerInput.checked ) {
+    features.some((element) => element === washerInput.value ) ? rank+=1 : rank;
+  }
+  if(features && elevatorInput.checked ) {
+    features.some((element) => element === elevatorInput.value ) ? rank+=1 : rank;
+  }
+  if(features && conditionerInput.checked ) {
+    features.some((element) => element === conditionerInput.value ) ? rank+=1 : rank;
+  }
+
+  return rank;
+};
+const compareOffers = (offerA, offerB) => {
+  const rankA = getOfferRank(offerA);
+  const rankB = getOfferRank(offerB);
+
+  return rankB - rankA;
+};
+const deleteUnrelevantOffers = (element) => {
+  const getMaxRank = () => {
+    let rank = 0;
+    const featureInputs = mapFilters.querySelector('#housing-features').querySelectorAll('input');
+    featureInputs.forEach((input) => input.checked ? rank +=1 : rank);
+    return rank;
+  };
+  const maxRank = getMaxRank();
+  const elementRank = getOfferRank(element);
+
+  return maxRank === elementRank;
+
+};
+
 const renderPoints = (points) => {
+  simpleMarkerGroup.clearLayers();
+
   points
-    .forEach((point) => createMarker(point, false, simpleMarkerGroup));
+    .slice()
+    .filter(filterType)
+    .filter(filterPrice)
+    .filter(filterRooms)
+    .filter(filterGuests)
+    .sort(compareOffers)
+    .filter(deleteUnrelevantOffers)
+    .slice(0, POINTS_QUANTITY)
+    .forEach((point) => createMarker(point, false));
+  simpleMarkerGroup.addTo(map);
 };
 
 const onMapLoad = () => {
   setPageActive();
   getData()
-    .then((points) => renderPoints(points.slice(0, POINTS_QUANTITY)))
+    .then((points) => {
+      setMapFiltersActive();
+      renderPoints(points);
+      setFilters(() => renderPoints(points));
+    })
     .catch(() => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу'));
 };
 
-const map = L.map('map-canvas')
-  .on('load', onMapLoad)
+
+map.on('load', onMapLoad)
   .setView({
     lat: TOKYO_LAT,
     lng: TOKYO_LNG,
@@ -104,8 +211,8 @@ L.tileLayer(
   },
 ).addTo(map);
 
-const mainMarker = createMarker(MAIN_PIN_POINT, true, map);
-simpleMarkerGroup.addTo(map);
+const mainMarker = createMarker(MAIN_PIN_POINT, true);
+
 
 const setMapStartPosition = () => {
   mainMarker.setLatLng({
