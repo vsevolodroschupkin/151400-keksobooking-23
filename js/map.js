@@ -218,5 +218,10 @@ const setMapStartPosition = () => {
   }, INITIAL_SCALE);
 };
 
-export { map, setMapStartPosition, mainMarker };
+const setMapFiltersStartPosition = () => {
+  mapFilters.reset();
+  onMapLoad();
+};
+
+export { setMapStartPosition, setMapFiltersStartPosition, mainMarker };
 

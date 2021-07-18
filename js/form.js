@@ -1,4 +1,4 @@
-import { setMapStartPosition, mainMarker } from './map.js';
+import { setMapStartPosition, setMapFiltersStartPosition, mainMarker } from './map.js';
 import { isEscEvent } from './utils.js';
 import { sendData } from './api.js';
 
@@ -6,7 +6,7 @@ const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE_VALUE = 1000000;
 const LOCATION_PRECISENESS = 5;
-
+const CUSTOM_VALIDITY_SHADOW = '0 0 2px 0 #ff2a00';
 
 const TYPES = {
   bungalow: {
@@ -72,6 +72,7 @@ const validateCapacity = (evt) => {
   const capacityValue = capacity.value;
   if (!selectedRoomCapacities.includes(capacityValue)) {
     capacity.setCustomValidity('Количество комнат не соответсвует количеству гостей.');
+    capacity.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
     evt.preventDefault();
   } else {
     capacity.setCustomValidity('');
@@ -85,6 +86,7 @@ const validatePrice = () => {
   const value = offerPrice.value;
   if (value > MAX_PRICE_VALUE) {
     offerPrice.setCustomValidity(`Уменьшите цену на ${ value - MAX_PRICE_VALUE }`);
+    offerPrice.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
   } else {
     offerPrice.setCustomValidity('');
   }
@@ -96,8 +98,10 @@ const onTitleInput = () => {
 
   if (valueLength < MIN_TITLE_LENGTH) {
     offerTitle.setCustomValidity(`Ещё ${  MIN_TITLE_LENGTH - valueLength } симв.`);
+    offerTitle.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
   } else if (valueLength > MAX_TITLE_LENGTH) {
     offerTitle.setCustomValidity(`Удалите лишние ${ valueLength - MAX_TITLE_LENGTH } симв.`);
+    offerTitle.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
   } else {
     offerTitle.setCustomValidity('');
   }
@@ -178,6 +182,7 @@ const onSuccess = () => {
   renderSuccessWindow();
   form.reset();
   setMapStartPosition();
+  setMapFiltersStartPosition();
 
   document.addEventListener('click', onSuccessWindowClick);
   document.addEventListener('keydown', onSuccessWindowEscKeydown);
@@ -199,6 +204,7 @@ const onFormSubmit = (evt) => {
 
 const onFormReset = () => {
   setMapStartPosition();
+  setMapFiltersStartPosition();
 };
 
 const onMainMarkerMoveend = (evt) => {
@@ -213,4 +219,8 @@ capacity.addEventListener('change', onCapacityChange);
 offerRoomNumber.addEventListener('change', onRoomsChange);
 formReset.addEventListener('click', onFormReset);
 form.addEventListener('submit', onFormSubmit);
+form.addEventListener('load', () => {
+  offerPrice.setAttribute('min', TYPES[`${ offerType.value }`]['minPrice']);
+  offerPrice.setAttribute('placeholder', TYPES[`${ offerType.value }`]['minPrice']);
+});
 mainMarker.on('moveend', onMainMarkerMoveend);
