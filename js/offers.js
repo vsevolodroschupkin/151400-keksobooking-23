@@ -38,7 +38,7 @@ const createOfferElement = (offer) => {
   }
 
   offerCapacity.textContent = offer.offer.rooms && offer.offer.guests ? `${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей` : offerElement.removeChild(offerCapacity);
-  offerTime.textContent = offer.offer.cheсkin && offer.offer.cheсkout ? `${offer.offer.cheсkin}, выезд до ${offer.offer.cheсkout}`: offerElement.removeChild(offerTime);
+  offerTime.textContent = offer.offer.checkin && offer.offer.checkout ? `${offer.offer.checkin}, выезд до ${offer.offer.checkout}`: offerElement.removeChild(offerTime);
   offerFeatures.textContent = offer.offer.features ? `${offer.offer.features.join(', ')}` : offerElement.removeChild(offerFeatures);
   offerDescription.textContent = offer.offer.description;
 
