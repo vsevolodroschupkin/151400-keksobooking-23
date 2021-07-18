@@ -216,6 +216,8 @@ const validateTime = (evt) => {
   if(timeinValue !== timeoutValue) {
     timein.setCustomValidity('Время заезда должно соответствовать времения выезда');
     timeout.setCustomValidity('Время выезда должно соответствовать времения заезда');
+    timein.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
+    timeout.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
     evt.preventDefault();
   } else {
     timein.setCustomValidity('');
@@ -240,8 +242,4 @@ timein.addEventListener('change', validateTime);
 timeout.addEventListener('change', validateTime);
 formReset.addEventListener('click', onFormReset);
 form.addEventListener('submit', onFormSubmit);
-form.addEventListener('load', () => {
-  offerPrice.setAttribute('min', TYPES[`${ offerType.value }`]['minPrice']);
-  offerPrice.setAttribute('placeholder', TYPES[`${ offerType.value }`]['minPrice']);
-});
 mainMarker.on('moveend', onMainMarkerMoveend);
