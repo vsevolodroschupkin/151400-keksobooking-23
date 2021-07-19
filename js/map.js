@@ -1,6 +1,8 @@
 import * as utils from './utils.js';
 import { createOfferElement } from './offers.js';
 import { getData } from './api.js';
+import { debounce } from './utils/debounce.js';
+
 
 const TOKYO_LAT = '35.6895000';
 const TOKYO_LNG = '139.6917100';
@@ -21,6 +23,7 @@ const SIMPLE_MARKER_HEIGHT = 40;
 const SIMPLE_MARKER_URL = 'img/pin.svg';
 const SIMPLE_MARKER_ANCHOR_X = SIMPLE_MARKER_WIDTH / 2;
 const POINTS_QUANTITY = 10;
+const DEBOUNCE_TIME = 5000;
 
 const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -184,7 +187,7 @@ const onMapLoad = () => {
     .then((points) => {
       setMapFiltersActive();
       renderPoints(points);
-      setFilters(() => renderPoints(points));
+      setFilters(debounce(() => renderPoints(points)), DEBOUNCE_TIME);
     })
     .catch(() => utils.renderAlert('Не удалось загрузить похожие объявления. Попробуйте перезагрузить страницу'));
 };
