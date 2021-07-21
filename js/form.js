@@ -73,7 +73,7 @@ const validateCapacity = (evt) => {
   const selectedRoomCapacities = ROOM_CAPACITIES[offerRoomNumber.value];
   const capacityValue = capacity.value;
   if (!selectedRoomCapacities.includes(capacityValue)) {
-    capacity.setCustomValidity('Количество комнат не соответсвует количеству гостей.');
+    capacity.setCustomValidity('Количество комнат не соответствует количеству гостей.');
     capacity.style.boxShadow = CUSTOM_VALIDITY_SHADOW;
     evt.preventDefault();
   } else {
