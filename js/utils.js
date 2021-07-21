@@ -45,8 +45,8 @@ function setElementsDisabled (elements) {
   Array.from(elements).forEach((element) => element.setAttribute('disabled', 'disabled'));
 }
 
-function setElementsEnabled (elemets) {
-  Array.from(elemets).forEach((element) => element.removeAttribute('disabled'));
+function setElementsEnabled (elements) {
+  Array.from(elements).forEach((element) => element.removeAttribute('disabled'));
 }
 
 function isEscEvent (evt) {
