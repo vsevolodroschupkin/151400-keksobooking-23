@@ -115,11 +115,11 @@ const filterPrice = (point) => {
 };
 const filterRooms = (point) => {
   const roomsValue = document.querySelector('#housing-rooms').value;
-  return roomsValue === 'any' ? point.offer.rooms : roomsValue === point.offer.rooms.toString();
+  return roomsValue === VALUE_ANY ? point.offer.rooms : roomsValue === point.offer.rooms.toString();
 };
 const filterGuests = (point) => {
   const typeValue = document.querySelector('#housing-guests').value;
-  return typeValue === 'any' ? point.offer.guests : typeValue === point.offer.guests.toString();
+  return typeValue === VALUE_ANY ? point.offer.guests : typeValue === point.offer.guests.toString();
 };
 const getOfferRank = (offer) => {
   const wifiInput = document.querySelector('#filter-wifi');

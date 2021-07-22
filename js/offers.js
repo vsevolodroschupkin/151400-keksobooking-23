@@ -1,3 +1,9 @@
+const VALUE_FLAT = 'Квартира';
+const VALUE_BUNGALOW = 'Бунгало';
+const VALUE_HOUSE = 'Дом';
+const VALUE_PALACE = 'Дворец';
+const VALUE_HOTEL = 'Отель';
+
 const cardTemplate  = document.querySelector('#card').content.querySelector('.popup');
 
 const createOfferElement = (offer) => {
@@ -20,19 +26,19 @@ const createOfferElement = (offer) => {
 
   switch(offer.offer.type) {
     case 'flat' :
-      offerType.textContent = 'Квартира';
+      offerType.textContent = VALUE_FLAT;
       break;
     case 'bungalow' :
-      offerType.textContent = 'Бунгало';
+      offerType.textContent = VALUE_BUNGALOW;
       break;
     case 'house' :
-      offerType.textContent = 'Дом';
+      offerType.textContent = VALUE_HOUSE;
       break;
     case 'palace' :
-      offerType.textContent = 'Дворец';
+      offerType.textContent = VALUE_PALACE;
       break;
     case 'hotel' :
-      offerType.textContent = 'Отель';
+      offerType.textContent = VALUE_HOTEL;
       break;
     default: offerElement.removeChild(offerType);
   }
