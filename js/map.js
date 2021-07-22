@@ -24,6 +24,10 @@ const SIMPLE_MARKER_URL = 'img/pin.svg';
 const SIMPLE_MARKER_ANCHOR_X = SIMPLE_MARKER_WIDTH / 2;
 const POINTS_QUANTITY = 10;
 const DEBOUNCE_TIME = 5000;
+const VALUE_ANY = 'any';
+const VALUE_LOW = 'low';
+const VALUE_MIDDLE = 'middle';
+const VALUE_HIGH = 'high';
 
 const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -89,25 +93,25 @@ const createMarker = (point, isMain = false) => {
 const setFilters = (cb) => mapFilters.addEventListener('change', cb);
 const filterType = (point) => {
   const typeValue = document.querySelector('#housing-type').value;
-  return typeValue === 'any' ? point.offer.type : typeValue === point.offer.type;
+  return typeValue === VALUE_ANY ? point.offer.type : typeValue === point.offer.type;
 };
 const filterPrice = (point) => {
   const priceValue = document.querySelector('#housing-price').value;
   let offerPrice;
   switch (true) {
     case point.offer.price < 10000 :
-      offerPrice = 'low';
+      offerPrice = VALUE_LOW;
       break;
     case point.offer.price >= 10000 && point.offer.price < 50000 :
-      offerPrice = 'middle';
+      offerPrice = VALUE_MIDDLE;
       break;
     case point.offer.price >= 50000 :
-      offerPrice = 'high';
+      offerPrice = VALUE_HIGH;
       break;
     default:
-      offerPrice = 'any';
+      offerPrice = VALUE_ANY;
   }
-  return priceValue === 'any' ? point.offer.price : priceValue === offerPrice;
+  return priceValue === VALUE_ANY ? point.offer.price : priceValue === offerPrice;
 };
 const filterRooms = (point) => {
   const roomsValue = document.querySelector('#housing-rooms').value;
