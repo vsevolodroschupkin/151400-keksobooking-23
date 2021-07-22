@@ -1,6 +1,7 @@
 import { setMapStartPosition, setMapFiltersStartPosition, mainMarker } from './map.js';
 import { isEscEvent } from './utils.js';
 import { sendData } from './api.js';
+import { resetAvatar, resetImage } from './images.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -185,6 +186,8 @@ const onSuccess = () => {
   form.reset();
   setMapStartPosition();
   setMapFiltersStartPosition();
+  resetAvatar();
+  resetImage();
 
   document.addEventListener('click', onSuccessWindowClick);
   document.addEventListener('keydown', onSuccessWindowEscKeydown);
@@ -207,6 +210,8 @@ const onFormSubmit = (evt) => {
 const onFormReset = () => {
   setMapStartPosition();
   setMapFiltersStartPosition();
+  resetAvatar();
+  resetImage();
 };
 
 const validateTime = (evt) => {

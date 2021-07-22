@@ -1,11 +1,12 @@
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+const AVATAR_REVIEW_SRC = 'img/muffin-grey.svg';
 
 const avatarChooser = document.querySelector('#avatar');
 const avatarPreview = document.querySelector('.ad-form-header__preview').querySelector('img');
 const imagesChooser = document.querySelector('#images');
 const adFormPhoto = document.querySelector('.ad-form__photo');
 
-avatarChooser.addEventListener('change', () => {
+const onAvatarChange = () => {
   const file = avatarChooser.files[0];
   const fileName = file.name.toLowerCase();
 
@@ -20,10 +21,9 @@ avatarChooser.addEventListener('change', () => {
 
     reader.readAsDataURL(file);
   }
-});
+};
 
-
-imagesChooser.addEventListener('change', () => {
+const onImageChange = () => {
   const file = imagesChooser.files[0];
   const fileName = file.name.toLowerCase();
 
@@ -45,4 +45,20 @@ imagesChooser.addEventListener('change', () => {
 
     reader.readAsDataURL(file);
   }
-});
+};
+
+const resetAvatar = () => {
+  avatarPreview.src = AVATAR_REVIEW_SRC;
+};
+const resetImage = () => {
+  const images = adFormPhoto.querySelectorAll('img');
+
+  if(images) {
+    images.forEach((image) => image.remove());
+  }
+};
+
+avatarChooser.addEventListener('change', onAvatarChange);
+imagesChooser.addEventListener('change', onImageChange);
+
+export { resetAvatar, resetImage };
